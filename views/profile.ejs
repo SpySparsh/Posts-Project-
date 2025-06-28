@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #ffcc00;
+            text-align: center;
+        }
+        .input-container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        input[type="text"], textarea {
+            width: 96%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2d2d2d;
+            color: #f5f5f5;
+            font-size: 16px;
+        }
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: #aaa;
+            
+        }
+        textarea {
+            resize: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1e88e5;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1565c0;
+        }
+        .posts {
+            margin-top: 20px;
+        }
+        .post {
+            background-color: #1e1e1e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .post h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #ffcc00;
+        }
+        .post p {
+            margin: 10px 0 0;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h3 style=" display: flex; justify-content: space-between; margin: 0%;">
+        <a style="color:#85bff160; font-weight: 250; text-decoration: none;" href="/">Create New Account</a>
+        <a style="color: #933a03;font-weight: 250;text-decoration: none;" href="/logout">Logout</a>
+    </h3>
+    <div class="container">
+        <!-- User Profile Section -->
+    <div class="profile-header" style="text-align: center; margin-bottom: 20px;">
+        <a href="/profile/upload">
+         <img src="/images/uploads/<%= user.profilestring %>" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #6a6a6a71;" >
+         </a>
+        <h1>Welcome <%= user.username %></h1>
+    </div>
+        <!-- Input Area for New Post -->
+        <div class="input-container">
+            <form action="/addPost" method="POST">
+                <input type="text" name="title" placeholder="Post Title" required>
+                <textarea name="content" rows="4" placeholder="Write your post here..." required></textarea>
+                <button type="submit">Submit Post</button>
+            </form>
+        </div>
+        
+        <!-- Existing Posts -->
+        <div class="posts">
+            <% if (posts.length > 0) { %>
+                <% posts.forEach(function(post) { %>
+                    <div class="post">
+                        <h3 style="margin-bottom:20px; color:#cb95207b; display: flex; justify-content: space-between;">
+                            <%= post.title %>
+                            <span style="font-weight: 300; font-size: 14px; color: #344748; margin-top: 0%;">@<%= post.user.username %></span>
+                        </h3>
+                        <p style="margin-bottom: 15px;"><%= post.content %></p>
+                        <span style="color:#3e4142; font-size: small; margin-left: 2px;"><%= post.likes.length %> likes</span>
+                        <p style="margin: 6px;">
+                            <a style="color:#a83636; margin-right: 10px; text-decoration: none;" href="/like/<%= post._id %>">
+                                <%= post.likes.indexOf(user._id) === -1 ? "Like" : "Unlike" %>
+                            </a>
+                            <% if (post.user._id.toString() === user._id.toString()) { %>
+                                <a style="color:#57595994; text-decoration: none;" href="/edit/<%= post._id %>">Edit</a>
+                            <% } %>
+                        </p>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p style="text-align: center; color: #9c9c9c;">No posts yet. Start by writing the first post!</p>
+            <% } %>
+        </div>
+        
+    </div>
+</body>
+</html>
